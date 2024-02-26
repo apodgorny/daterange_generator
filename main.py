@@ -5,7 +5,6 @@ from babel.dates import format_date
 from datetime import date, timedelta
 
 
-
 fake = Faker()
 Faker.seed(12345)
 random.seed(12345)
@@ -13,23 +12,14 @@ random.seed(12345)
 RANGE_DENSITY = 0.7 # number of ranges / total
 MAX_RANGE     = 31
 MIN_RANGE     = 1
+CHAR_PAD      = '@'
+CHAR_UNK      = '^'
 
 # Define format of the data we would like to generate
 
 DATES_FROM = [ # DATE FROM
 	'short',
 	'medium',
-	'long',
-	'full',
-	'full',
-	'full',
-	'full',
-	'full',
-	'full',
-	'full',
-	'full',
-	'full',
-	'full',
 	'd MMM YYY',
 	'd MMMM YYY',
 	'dd MMM YYY',
@@ -52,23 +42,13 @@ DELIMITERS = [
 	'/ ',
 	' /',
 	' / ',
-	' '
+	' ',
+	' to '
 ]
 
 DATES_TO = [
 	'short',
 	'medium',
-	'long',
-	'full',
-	'full',
-	'full',
-	'full',
-	'full',
-	'full',
-	'full',
-	'full',
-	'full',
-	'full',
 	'd MMM YYY',
 	'd MMMM YYY',
 	'dd MMM YYY',
@@ -87,48 +67,40 @@ LOCALES = ['en_US']
 
 def generate_date(date, format):
 	try:
-		human_readable = format_date(date, format=format,  locale='en_US') # locale=random.choice(LOCALES))
-		human_readable = human_readable.lower()
-		human_readable = human_readable.replace(',','')
-		machine_readable = date.isoformat().replace('-', '')
-
+		return (
+			format_date(date, format=format, locale='en_GB').lower().replace(',',''),
+			date.isoformat().replace('-', '')
+		)
 	except AttributeError as e:
 		return None, None
 
-	return human_readable, machine_readable
-
 def compile_range(dt_from, dt_to):
-	dt_from_human_readable, dt_from_machine_readable = generate_date(dt_from, random.choice(DATES_FROM))
+	dt_from_h, dt_from_m = generate_date(dt_from, random.choice(DATES_FROM))
 	if dt_to:
-		dt_to_human_readable,   dt_to_machine_readable   = generate_date(dt_to, random.choice(DATES_TO))
+		dt_to_h, dt_to_m = generate_date(dt_to, random.choice(DATES_TO))
 		delimiter = random.choice(DELIMITERS)
-		return f'{dt_from_human_readable}{delimiter}{dt_to_human_readable}', f'{dt_from_machine_readable}{dt_to_machine_readable}'
 	else:
-		return dt_from_human_readable, f'{dt_from_machine_readable}{8*"<pad>"}'
+		delimiter = ''
+		dt_to_h   = ''
+		dt_to_m   = CHAR_PAD * 8
+
+	return (
+		f'{dt_from_h}{delimiter}{dt_to_h}',
+		f'{dt_from_m}{dt_to_m}'
+	)
 
 def load_date_range():
-	"""
-		Loads some fake dates
-		:returns: tuple containing human readable string, machine readable string, and date object
-	"""
-	is_range = random.random() < RANGE_DENSITY
+	is_range   = random.random() < RANGE_DENSITY
+	range_days = timedelta(days=random.randint(MIN_RANGE, MAX_RANGE))
 	
 	dt_from = fake.date_object()
-	dt_to   = dt_from + timedelta(days=random.randint(MAX_RANGE, MIN_RANGE)) if is_range else None
+	dt_to   = dt_from + range_days if is_range else None
 	return compile_range(dt_from, dt_to)
 
-
 def load_dataset(m):
-	"""
-		Loads a dataset with m examples and vocabularies
-		:m: the number of examples to generate
-	"""
-
 	human_vocab = set()
 	machine_vocab = set()
 	dataset = []
-	Tx = 30
-
 
 	for i in tqdm(range(m)):
 		h, m = load_date_range()
@@ -137,8 +109,10 @@ def load_dataset(m):
 			human_vocab.update(tuple(h))
 			machine_vocab.update(tuple(m))
 
-	human = dict(zip(sorted(human_vocab) + ['<unk>', '<pad>'],
-					 list(range(len(human_vocab) + 2))))
+	human = dict(zip(
+		sorted(human_vocab) + [CHAR_UNK, CHAR_PAD],
+		list(range(len(human_vocab) + 2))
+	))
 	inv_machine = dict(enumerate(sorted(machine_vocab)))
 	machine = {v:k for k,v in inv_machine.items()}
 
@@ -146,3 +120,4 @@ def load_dataset(m):
 
 if __name__ == '__main__':
 	print(load_dataset(10))
+
