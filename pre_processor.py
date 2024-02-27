@@ -1,7 +1,7 @@
 import re
 
 from library.string import String, SEP, PAR
-from constants      import TOKEN_NUM_SM, TOKEN_NUM_LG, TOKEN_MONTH, TOKEN_SUFFIX, TOKEN_UNK
+from constants      import *
 
 
 class PreProcessor:
@@ -13,7 +13,15 @@ class PreProcessor:
 		# Iteratively replace double spaces with single spaces until no more double spaces are found
 		while '  ' in s:
 			s = s.replace('  ', ' ')
+		s = PreProcessor.replace_spaced_characters(s)
 		return s
+
+	@staticmethod
+	def replace_spaced_characters(s): # thins like "t o d a y"
+	    # Regular expression pattern to match sequences of single spaced characters
+	    pattern = r'\b(?:[a-zA-Z] )+[a-zA-Z]\b'
+	    # Replace found patterns with their unspaced version
+	    return re.sub(pattern, lambda x: ''.join(x.group().split()), s)
 
 	@staticmethod
 	def split_and_keep_delimiters(s, delimiters):
@@ -53,6 +61,8 @@ class PreProcessor:
 
 	@classmethod
 	def process_date(cls, date):
+		sep1      = None
+		sep2      = None
 		tokens    = cls.split_and_keep_delimiters(date, SEP + PAR)
 		formula   = ''
 		variables = []
@@ -67,15 +77,36 @@ class PreProcessor:
 					formula += TOKEN_NUM_LG
 				variables.append(int(token))
 			elif String.is_sep(token):
-				formula += token
+				if token != ' ':
+					if not sep1:
+						sep1 = token
+						formula += TOKEN_SEP1
+					elif sep1 != token:
+						sep2 = token
+						formula += TOKEN_SEP2
+					else:
+						if token == sep1:
+							formula += TOKEN_SEP1
+						else:
+							formula += TOKEN_SEP2
 			elif String.is_par(token):
 				formula += token
 			elif String.is_suffix(token):
-				formula += TOKEN_SUFFIX
+				pass
+			elif String.is_after_word(token):
+				formula += TOKEN_AFTER
+			elif String.is_begin_word(token):
+				formula += TOKEN_BEGIN
+			elif String.is_end_word(token):
+				formula += TOKEN_END
+			elif String.is_now_word(token):
+				formula = '&&&'
+				break
 			elif token == '':
 				pass
 			else:
-				formula += TOKEN_UNK
+				# formula += TOKEN_UNK
+				pass
 
 		formula = cls.collapse_consecutive_unk(formula) \
 			.replace(' )', ')') \

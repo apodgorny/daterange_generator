@@ -1,6 +1,12 @@
 import re
 
 SUFFIX  = ('th','nd','st','rd')
+
+AFTER = ('onw','onward','after','later','afterwards')
+BEGIN = ('beg','begin','early','start')
+END   = ('end','late')
+NOW   = ('now', 'today')
+
 ALPHA_MONTHS = (
 	('jan','january'),
 	('fb','feb', 'february'),
@@ -29,6 +35,12 @@ PAR = [')', '(']
 
 
 class String:
+	@staticmethod
+	def char(s, n, c=None):
+		if c is not None:
+			return s[:n] + c + s[n + 1:]
+		return s[n]
+
 	@staticmethod
 	def is_alpha(s):
 		return bool(re.match(r'^[\p{L} ]+$', s))
@@ -67,4 +79,21 @@ class String:
 	@staticmethod
 	def is_par(s):
 		return s in PAR
+
+	@staticmethod
+	def is_after_word(s):
+		return s in AFTER
+
+	@staticmethod
+	def is_begin_word(s):
+		return s in BEGIN
+
+	@staticmethod
+	def is_end_word(s):
+		return s in END
+
+	@staticmethod
+	def is_now_word(s):
+		return s in NOW
+		
 	
