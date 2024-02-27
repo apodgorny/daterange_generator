@@ -62,6 +62,10 @@ DATES_TO = [
 	'dd.MM.YY'
 ]
 
+FORMATS = (
+	('dd', 'dd/mm', 'ddmm&&&&', 'ddmm&&&&')
+)
+
 # change this if you want it to work with another language
 LOCALES = ['en_US']
 
