@@ -81,8 +81,8 @@ class PostProcessor:
 			else:
 				day = variables[int(d)]
 
-
-			return datetime(int(year), int(month), int(day))
+			
+			return datetime(int(year) or 2000, int(month), int(day))
 		return None
 
 	def __call__(self, formula, variables):

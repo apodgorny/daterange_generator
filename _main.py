@@ -3,10 +3,11 @@ import random
 from tqdm import tqdm
 from babel.dates import format_date
 from datetime import date, timedelta
+import json
 
 
 fake = Faker()
-Faker.seed(12345)
+Faker.seed(1231345)
 random.seed(12345)
 
 RANGE_DENSITY = 0.7 # number of ranges / total
@@ -37,7 +38,7 @@ DELIMITERS = [
 	'-',
 	' -',
 	'- ',
-	' - '
+	' - ',
 	'/',
 	'/ ',
 	' /',
@@ -66,6 +67,9 @@ FORMATS = (
 	('dd', 'dd/mm', 'ddmm&&&&', 'ddmm&&&&')
 )
 
+
+
+
 # change this if you want it to work with another language
 LOCALES = ['en_US']
 
@@ -83,11 +87,12 @@ def compile_range(dt_from, dt_to):
 	if dt_to:
 		dt_to_h, dt_to_m = generate_date(dt_to, random.choice(DATES_TO))
 		delimiter = random.choice(DELIMITERS)
+		print(delimiter)
 	else:
 		delimiter = ''
 		dt_to_h   = ''
 		dt_to_m   = CHAR_PAD * 8
-
+	
 	return (
 		f'{dt_from_h}{delimiter}{dt_to_h}',
 		f'{dt_from_m}{dt_to_m}'
@@ -123,5 +128,6 @@ def load_dataset(m):
 	return dataset, human, machine, inv_machine
 
 if __name__ == '__main__':
-	print(load_dataset(10))
+	for d in load_dataset(500)[0]:
+		print(d[0])
 

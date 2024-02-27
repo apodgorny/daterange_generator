@@ -18,10 +18,10 @@ class PreProcessor:
 
 	@staticmethod
 	def replace_spaced_characters(s): # thins like "t o d a y"
-	    # Regular expression pattern to match sequences of single spaced characters
-	    pattern = r'\b(?:[a-zA-Z] )+[a-zA-Z]\b'
-	    # Replace found patterns with their unspaced version
-	    return re.sub(pattern, lambda x: ''.join(x.group().split()), s)
+		# Regular expression pattern to match sequences of single spaced characters
+		pattern = r'\b(?:[a-zA-Z] )+[a-zA-Z]\b'
+		# Replace found patterns with their unspaced version
+		return re.sub(pattern, lambda x: ''.join(x.group().split()), s)
 
 	@staticmethod
 	def split_and_keep_delimiters(s, delimiters):

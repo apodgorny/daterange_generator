@@ -8,7 +8,7 @@ def main():
 	dates = PreProcessor.get_dates(FILE_NAME)
 	success_counter = 0
 
-	print('date'.ljust(15), '|', 'pre_formula'.ljust(15), '|', 'variables'.ljust(15), '|', 'post_formula'.ljust(15), '|', 'dt_from', ' - ', 'dt_to')
+	print('date'.ljust(30), '|', 'pre_formula'.ljust(10), '|', 'dt_from', ' - ', 'dt_to')
 
 	for date in dates:
 		pre_formula, variables = PreProcessor.process_date(date)
@@ -22,9 +22,10 @@ def main():
 			success_counter += 1
 			print(date.ljust(30), '|', pre_formula.ljust(10), '|', dt_from, ' - ', dt_to)
 		else:
-			print(f'---> {pre_formula}----{date}')
+			# print(f'---> {pre_formula}----{date}')
 			# print(date, pre_formula)
-
+			pass
+		
 	print('Success:', success_counter, '/', len(dates))
 
 if __name__ == '__main__':

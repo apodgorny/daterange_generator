@@ -10,7 +10,7 @@ NOW   = ('now', 'today')
 ALPHA_MONTHS = (
 	('jan','january'),
 	('fb','feb', 'february'),
-	('mrch', 'march'),
+	('mrch', 'march', 'mar'),
 	('ap', 'apr', 'april'),
 	('my', 'may'),
 	('jn', 'jun', 'june'),
