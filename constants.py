@@ -1,0 +1,6 @@
+TOKEN_NUM_SM  = 'n'
+TOKEN_NUM_LG  = 'N'
+TOKEN_MONTH   = 'm'
+TOKEN_UNK     = 'u'
+TOKEN_SUFFIX  = 's'
+TOKEN_CURRENT = '&'
