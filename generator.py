@@ -58,7 +58,7 @@ def can_go_first(s):
 	return d == '' or d == '/'
 
 def get_month_pos(s):
-	pos = 0
+	pos = -1
 	for c in s:
 		if c in 'mnN':
 			pos += 1
@@ -67,7 +67,7 @@ def get_month_pos(s):
 	return -1
 
 def get_year_pos(s):
-	pos = 0
+	pos = -1
 	for c in s:
 		if c in 'mnN':
 			pos += 1
@@ -343,13 +343,13 @@ def get_post_formula(mx, my, yx, yy):
 								if yy == 2:
 									# mnN mnN
 									f = '102435'
-						
+	return f
 
 def run(triads):
 	unique   = set()
 	formulas = []
-	mx, my
-	yx, yy
+	mx, my   =  None, None
+	yx, yy   =  None, None
 	for x in triads:
 		mx = get_month_pos(x)
 		yx = get_year_pos(x)
@@ -359,14 +359,17 @@ def run(triads):
 			for d in delims:
 				if can_go_first(x):
 					if get_delim(x) != d and get_delim(y) != d:
-						f1 = f'{x}{d}{y}'
-						f2 = get_post_formula(mx, my, yx, yy)
-						if f1 not in unique:
-							formulas.append([f1, f2])
-							unique.add(f1)
+						pre  = f'{x}{d}{y}'
+						post = get_post_formula(mx, my, yx, yy)
+						if pre not in unique:
+							formulas.append([pre, post])
+							unique.add(pre)
 	return formulas
 
 formulas = run(triads)
+
+for pre, post in formulas:
+	print(f'{pre} : {post}')
 
 
 
