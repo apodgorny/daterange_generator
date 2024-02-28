@@ -7,8 +7,8 @@ import json
 
 
 fake = Faker()
-Faker.seed(1231345)
-random.seed(12345)
+Faker.seed(234235)
+random.seed(32534235)
 
 RANGE_DENSITY = 0.7 # number of ranges / total
 MAX_RANGE     = 31
@@ -128,6 +128,6 @@ def load_dataset(m):
 	return dataset, human, machine, inv_machine
 
 if __name__ == '__main__':
-	for d in load_dataset(500)[0]:
+	for d in load_dataset(1001)[0]:
 		print(d[0])
 

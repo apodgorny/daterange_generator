@@ -20,10 +20,10 @@ def main():
 			dt_to          = dt_to.strftime('%d/%m/%Y') if dt_to else 'null'
 
 			success_counter += 1
-			print(date.ljust(30), '|', pre_formula.ljust(10), '|', dt_from, ' - ', dt_to)
+			# print(date.ljust(30), '|', pre_formula.ljust(10), '|', dt_from, ' - ', dt_to)
 		else:
 			# print(f'---> {pre_formula}----{date}')
-			# print(date, pre_formula)
+			print(date, pre_formula)
 			pass
 		
 	print('Success:', success_counter, '/', len(dates))
