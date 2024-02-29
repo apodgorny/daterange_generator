@@ -1,3 +1,6 @@
+import json
+from mapping import MAPPING
+
 triads = (
 	'nnn',
 	'nnN',
@@ -96,8 +99,7 @@ def get_simple_triad(s):
 	return s.replace('-', '').replace('/', '')
 
 def run(triads):
-	unique   = set()
-	formulas = []
+	formulas = {}
 	mx, my   =  None, None
 	yx, yy   =  None, None
 	for x in triads:
@@ -108,21 +110,26 @@ def run(triads):
 			yy = get_year_pos(y)
 			for d in delims:
 				if can_go_first(x):
-					if get_delim(x) != d and get_delim(y) != d:
+					# if get_delim(x) != d and get_delim(y) != d:
 						pre = f'{x}{d}{y}'
-						if pre not in unique:
+						if not formulas.get(pre):
 							post = get_post_formula(x, y)
-							formulas.append([pre, post])
-							unique.add(pre)
+							formulas[pre] = post
 	return formulas
 
-formulas= run(triads)
+formulas = run(triads)
 
-for pre, post in formulas:
-	print(pre.ljust(25), post)
+for pre in formulas:
+	print(pre.ljust(25), formulas[pre])
 
-print(len(formulas))
+print('formulas', len(formulas))
+print('mapping', len(MAPPING))
+MAPPING.update(formulas)
 
+print('total', len(MAPPING))
+
+with open('data/mapping.json', 'w') as f:
+	f.write(json.dumps(MAPPING, indent=4))
 
 
 
